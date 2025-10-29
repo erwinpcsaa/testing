@@ -5,6 +5,44 @@
 </head>
 <body>
   <h1>Elastic Dashboard</h1>
-<iframe src="https://elkdbi-embeded.pcsindonesia.com/app/dashboards#/view/95c77f46-1cf5-4b9d-b241-3bc1f92275f9?_g=(refreshInterval%3A(pause%3A!t%2Cvalue%3A60000)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))&show-time-filter=true" height="600" width="800" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+
+  <iframe id="dashboardIframe" height="600" width="800"></iframe>
+
+  <script>
+    async function loadIframeWithHeaders(iframeId, url, customHeaderValue) {
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'X-Custom-Auth-Token': customHeaderValue,
+            'Accept': 'text/html'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const html = await response.text();
+
+        // Create a blob from the HTML content
+        const blob = new Blob([html], { type: 'text/html' });
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Set the iframe src to the blob URL
+        document.getElementById(iframeId).src = blobUrl;
+
+      } catch (error) {
+        console.error('Error loading iframe:', error);
+      }
+    }
+
+    // Example usage
+    loadIframeWithHeaders(
+      'dashboardIframe',
+      'https://elkdbi-embeded.pcsindonesia.com/app/dashboards#/view/95c77f46-1cf5-4b9d-b241-3bc1f92275f9?_g=(refreshInterval%3A(pause%3A!t%2Cvalue%3A60000)%2Ctime%3A(from%3Anow-15m%2Cto%3Anow))&show-time-filter=true',
+      'cobacoba'
+    );
+  </script>
 </body>
 </html>
